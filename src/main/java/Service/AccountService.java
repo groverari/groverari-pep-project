@@ -21,7 +21,7 @@ public class AccountService {
             return null;
         }
         Account a =  accountDAO.login(acc);
-        if(a.getPassword() == acc.getPassword()){
+        if(a.getPassword().compareTo( acc.getPassword()) == 0){
             return a;
         }
         return null;

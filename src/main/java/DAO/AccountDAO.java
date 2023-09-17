@@ -35,17 +35,17 @@ public class AccountDAO {
         Connection connection = ConnectionUtil.getConnection();
         try{
             String sql = "SELECT * FROM  Account WHERE username = ?";
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement(sql);
 
             ps.setString(1, acc.username);
             
-            ps.executeUpdate();
+           
 
-            ResultSet pkeyResultSet = ps.getGeneratedKeys();
+            ResultSet rs =  ps.executeQuery();
 
-            if(pkeyResultSet.next()){
-                int generated_author_id = (int) pkeyResultSet.getLong(1);
-                return new Account(generated_author_id, acc.getUsername(),  acc.getPassword());
+            if(rs.next()){
+                
+                return new Account(rs.getInt("account_id"), acc.getUsername(),  rs.getString("password"));
             }
             
         }catch(SQLException e){
