@@ -14,6 +14,7 @@ public class MessageService {
 
     public Message addMessage(Message m){
         System.out.println("Made it here");
+        boolean x = mDAO.checkID(m.getPosted_by());
         if(m.getMessage_text().length() > 0 &&
          m.getMessage_text().length() < 255 && 
          mDAO.checkID(m.getPosted_by())){

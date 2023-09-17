@@ -17,7 +17,7 @@ public class MessagesDAO {
             ResultSet rs = preparedStatement.executeQuery();
 
             while(rs.next()){
-                Message m = new Message(rs.getInt("id"), rs.getInt("posted_by"), rs.getString("message_text"), rs.getLong("time_posted"));
+                Message m = new Message(rs.getInt("message_id"), rs.getInt("posted_by"), rs.getString("message_text"), rs.getLong("time_posted_epoch"));
                 messages.add(m);
             }
         }catch(SQLException e){
@@ -30,16 +30,16 @@ public class MessagesDAO {
         Connection connection = ConnectionUtil.getConnection();
         try{
             String sql  = "INSERT INTO Message(posted_by, message_text, time_posted_epoch) VALUES (?,?,?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             
             preparedStatement.setInt(1, m.getPosted_by());
             preparedStatement.setString(2, m.getMessage_text());
             preparedStatement.setLong(3, m.getTime_posted_epoch());
         
             preparedStatement.executeUpdate();
-            ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
-            if(pkeyResultSet.next()){
-                int generated_message_id = (int) pkeyResultSet.getLong(1);
+            ResultSet rs = preparedStatement.getGeneratedKeys();
+            if(rs.next()){
+                int generated_message_id = (int) rs.getLong(1);
                 return new Message(generated_message_id, m.getPosted_by(), m.getMessage_text(), m.getTime_posted_epoch());
             }
         }catch(SQLException e) {System.out.println(e.getMessage());}
@@ -113,7 +113,7 @@ public class MessagesDAO {
             ResultSet rs = preparedStatement.executeQuery();
 
             while(rs.next()){
-                Message m = new Message(rs.getInt("id"), rs.getInt("posted_by"), rs.getString("message_text"), rs.getLong("time_posted"));
+                Message m = new Message(rs.getInt("message_id"), rs.getInt("posted_by"), rs.getString("message_text"), rs.getLong("time_posted_epoch"));
                 messages.add(m);
             }
         }catch(SQLException e){
